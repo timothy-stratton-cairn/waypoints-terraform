@@ -5,7 +5,8 @@ resource "aws_subnet" "public_subnets" {
   availability_zone = element(var.azs, count.index)
 
   tags = {
-    Name = "${terraform.workspace} Public Subnet ${count.index + 1}"
+    Name    = "${upper(terraform.workspace)} Public Subnet ${count.index + 1}"
+    Network = "public"
   }
 }
 

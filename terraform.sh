@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-TERRAFORM_VERSION=1.0.0
-
 function getWorkspaceDir() {
     MY_PATH="$(dirname "$0")"         # relative
     MY_PATH="$(cd "$MY_PATH" && pwd)" # absolutized and normalized
@@ -29,23 +27,7 @@ fi
 
 ACTION_ARGS=$(echo "$@" | awk '{first = $1; second = $2; third = $3; $1 = ""; $2 = ""; $3 = ""; print $0 }')
 OS_SHORTNAME=$(uname | awk '{print tolower($0)}')
-TERRAFORM_LOCATION=/c/development/tools/terraform-1.6.2/terraform
-
-## Validate Terrform version
-CURRENT_VERSION=$($TERRAFORM_LOCATION --version 2>/dev/null | head -1 | awk '{print $2}' | sed 's/^v//')
-if [ ! "$CURRENT_VERSION" == "$TERRAFORM_VERSION" ]; then
-    FILE=$(mktemp)
-    echo "This project is currently using terraform v$TERRAFORM_VERSION. You're at v$CURRENT_VERSION. Installing terraform@${TERRAFORM_VERSION}..."
-    if [ "$(uname)" == "Darwin" ]; then
-        curl -L https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_darwin_amd64.zip -o $FILE
-        unzip -o $FILE -d $WORKSPACE/bin
-        rm -rf $FILE
-    elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-        curl -L https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o $FILE && unzip -o $FILE -d $WORKSPACE/bin && rm -rf $FILE
-    elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-        echo "You're running windows. Do it yourself."
-    fi
-fi
+TERRAFORM_LOCATION=/c/development/tools/terraform_1.8.0_windows_amd64/terraform
 
 echo ""
 echo "=============================================================================="

@@ -1,26 +1,10 @@
-# The RDS Cluster Identifier
-output "cluster_id" {
-  value = aws_rds_cluster.main.id
-}
-
-# The database port
 output "cluster_port" {
-  value = aws_rds_cluster.main.port
-}
-
-# The DNS address of the RDS instance
-output "cluster_dns" {
-  value = aws_rds_cluster.main.endpoint
-}
-
-# A read-only endpoint for the Aurora cluster, automatically load-balanced across replicas
-output "cluster_dns_read_only" {
-  value = aws_rds_cluster.main.reader_endpoint
+  value = aws_db_instance.rds_instance.port
 }
 
 # The database master username
 output "master_username" {
-  value = aws_rds_cluster.main.master_username
+  value = aws_db_instance.rds_instance.username
 }
 
 # The database master password
@@ -31,5 +15,9 @@ output "master_password" {
 
 # The database name
 output "database_name" {
-  value = aws_rds_cluster.main.database_name
+  value = aws_db_instance.rds_instance.db_name
+}
+
+output "db_url" {
+  value = aws_db_instance.rds_instance.address
 }
