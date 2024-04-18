@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "us-east-1"
-  profile = "sandbox"
+  profile = "deploy"
 
   default_tags {
     tags = {
