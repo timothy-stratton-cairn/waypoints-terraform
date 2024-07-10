@@ -1,7 +1,7 @@
 module "ecs_instance" {
   source = "../../../modules/waypoints-ui"
 
-  name          = "wp-dashboard-api"
+  name          = "waypoints-ui"
 
   allowed_cidrs = [
     "0.0.0.0/0",
