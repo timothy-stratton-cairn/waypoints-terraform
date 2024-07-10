@@ -19,7 +19,6 @@ resource "aws_ecs_task_definition" "main" {
           containerPort = var.container_port,
           protocol      = "tcp"
         }],
-      environment = local.environment_variables
       secrets     = local.secrets
       image       = local.image,
       logConfiguration = {

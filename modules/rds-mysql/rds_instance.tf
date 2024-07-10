@@ -1,5 +1,6 @@
 resource "random_string" "password" {
   length  = 16
+  override_special = "$#*=+!-"
 }
 
 resource "aws_db_instance" "rds_instance" {
@@ -21,7 +22,7 @@ resource "aws_db_instance" "rds_instance" {
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
-  name       = "main"
+  name       = "${terraform.workspace}-${var.db_name}"
   subnet_ids = [for subnet in data.aws_subnet.private_subnet : subnet.id]
 
   tags = {

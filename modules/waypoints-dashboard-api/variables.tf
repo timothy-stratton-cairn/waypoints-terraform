@@ -3,11 +3,11 @@ variable "name" {
 }
 
 variable "cpu" {
-  default = 512
+  default = 1024
 }
 
 variable "memory" {
-  default = 1024
+  default = 2048
 }
 
 variable "container_port" {
@@ -67,8 +67,7 @@ locals {
   )
 
   environment_variables = [
-    { name = "SPRING_PROFILES_ACTIVE", value = terraform.workspace },
-    { name = "DB_CONNECTION", value = "jdbc:mysql://${data.aws_ssm_parameter.DB_URL.value}:3306/${var.db_name}?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true" }
+    { name = "DB_URL", value = "jdbc:mysql://${data.aws_ssm_parameter.DB_URL.value}:3306/${var.db_name}?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true" }
   ]
 }
 
@@ -90,6 +89,7 @@ data "aws_ssm_parameters_by_path" "app" {
 
 data "aws_ssm_parameter" "version" {
   name = "/${terraform.workspace}/${var.name}/VERSION"
+  depends_on = [aws_ssm_parameter.version]
 }
 
 data "aws_ecr_repository" "repository" {

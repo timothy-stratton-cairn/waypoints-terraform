@@ -68,6 +68,7 @@ data "aws_ssm_parameters_by_path" "app" {
 
 data "aws_ssm_parameter" "version" {
   name = "/${terraform.workspace}/${var.name}/VERSION"
+  depends_on = [aws_ssm_parameter.version]
 }
 
 data "aws_ecr_repository" "repository" {
