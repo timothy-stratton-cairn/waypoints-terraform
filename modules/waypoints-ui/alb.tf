@@ -6,12 +6,13 @@ resource "aws_lb" "public" {
   subnets                    = data.aws_subnets.public.ids
   enable_deletion_protection = false
   idle_timeout               = 1200
-}
 
-####################
-# If public = true, still create private tg (above),
-# but then also create public tg below.
-####################
+  access_logs {
+    bucket  = "edo-alb-access-logs"
+    prefix  = "${terraform.workspace}/${var.name}"
+    enabled = true
+  }
+}
 
 resource "aws_lb_target_group" "public" {
   count                = var.public ? 1 : 0
@@ -43,6 +44,24 @@ resource "aws_lb_target_group" "public" {
   }
 }
 
+resource "aws_lb_listener" "https_public" {
+  count             = var.public ? 1 : 0
+  load_balancer_arn = aws_lb.public[0].arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+  certificate_arn   = aws_acm_certificate.main.arn
+
+  default_action {
+    target_group_arn = aws_lb_target_group.public[0].arn
+    type             = "forward"
+  }
+
+  lifecycle {
+    create_before_destroy = false
+  }
+}
+
 resource "aws_lb_listener" "http_public" {
   count             = var.public ? 1 : 0
   load_balancer_arn = aws_lb.public[0].arn
@@ -50,8 +69,12 @@ resource "aws_lb_listener" "http_public" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_lb_target_group.public.0.arn
-    type             = "forward"
+    type = "redirect"
+    redirect {
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+      port        = 443
+    }
   }
 
   lifecycle {

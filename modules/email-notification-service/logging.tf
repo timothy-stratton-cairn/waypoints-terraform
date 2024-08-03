@@ -3,12 +3,12 @@ resource "aws_cloudwatch_log_group" "aws_cli_log_group" {
   retention_in_days = 14
 
   tags = {
-    Name = "${upper(terraform.workspace)}-${var.name} EC2 Instance"
+    Name = "${upper(terraform.workspace)}-${var.name}"
   }
 }
 
 resource "aws_iam_policy" "lambda_logging" {
-  name        = "lambda_logging"
+  name        = "${lower(terraform.workspace)}_${var.name}_lambda_logging"
   path        = "/"
   description = "IAM policy for logging from a lambda"
 
@@ -30,7 +30,7 @@ resource "aws_iam_policy" "lambda_logging" {
 EOF
 
   tags = {
-    Name = "${upper(terraform.workspace)}-${var.name} EC2 Instance"
+    Name = "${upper(terraform.workspace)}-${var.name}"
   }
 }
 

@@ -3,11 +3,11 @@ variable "name" {
 }
 
 variable "cpu" {
-  default = 1024
+  default = 512
 }
 
 variable "memory" {
-  default = 2048
+  default = 1024
 }
 
 variable "container_port" {
